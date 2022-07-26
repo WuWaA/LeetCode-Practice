@@ -42,6 +42,14 @@ public class LeetCode_302_Q2 {
             sum_index[sum][10000]++; // use last extra index to record the size
         }
         /** find largest sum of "same digits sum" nums **/
+        
+    }
+
+    public static int maximumSum3(int[] nums) {
+        // if I can build a heap array with size of 81, which is heap[81]
+        // then I can sort the nums while adding them
+        // after that, I just need to add the largest two numbers in each heap
+        // that is only 81 times of additions
     }
 
     public static void main(String[] args) {
