@@ -1,4 +1,10 @@
 public class LeetCode_302_Q2 {
+    /**
+     * [Performance]
+     * Time Limit Exceeded
+     * @param nums input
+     * @return largest summation
+     */
     public static int maximumSum(int[] nums) {
         int max = -1;
         int leng = nums.length;
@@ -26,25 +32,48 @@ public class LeetCode_302_Q2 {
         return max;
     }
 
+    /**
+     * [Performance]
+     * Runtime: 533 ms, faster than 5.07% of Java online submissions for Max Sum of a Pair With Equal Sum of Digits.
+     * Memory Usage: 59.2 MB, less than 66.09% of Java online submissions for Max Sum of a Pair With Equal Sum of Digits.
+     * @param nums input
+     * @return largest summation
+     */
     public static int maximumSum2(int[] nums) {
         // the max sum is 81, so we save all sum and their index
         // later we will only calculate the value of index with same sum
         int max = -1;
         int leng = nums.length;
-        int sum_index[][] = new int[81][10001]; // nums.length <= 10^5
+        int sum_index[][] = new int[82][10001]; // nums.length <= 10^5
         /** calculate digits sum **/
         for (int i = 0; i < leng; i++) { // loop of nums
             String a = nums[i] + "";
             int sum = 0;
-            for (int m = 0; m < a.length(); m++) // loop of digits
-                sum += a.charAt(m) - '0'; // or, will "divide by 10" be faster?
-            sum_index[sum][sum_index[sum][10000]] = sum;
+            for (int j = 0; j < a.length(); j++) // loop of digits
+                sum += a.charAt(j) - '0'; // or, will "divide by 10" be faster?
+            sum_index[sum][sum_index[sum][10000]] = nums[i];
             sum_index[sum][10000]++; // use last extra index to record the size
         }
         /** find largest sum of "same digits sum" nums **/
-        
+        for (int n = 0; n < 82; n++) {
+            int amount = sum_index[n][10000];
+            for (int a_index = 0; a_index < amount; a_index++) {
+                for (int b_index = a_index + 1; b_index < amount; b_index++) {
+                    int sum = sum_index[n][a_index] + sum_index[n][b_index];
+                    if (sum > max) {
+                        max = sum;
+                    }
+                }
+            }
+        }
+        return max;
     }
 
+    /**
+     * [Performance]
+     * @param nums input
+     * @return largest summation
+     */
     public static int maximumSum3(int[] nums) {
         // if I can build a heap array with size of 81, which is heap[81]
         // then I can sort the nums while adding them
