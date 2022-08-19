@@ -1,4 +1,4 @@
-public class LeetCode_302_Q2 {
+public class Max_Sum_of_a_Pair_With_Equal_Sum_of_Digits {
     /**
      * [Performance]
      * Time Limit Exceeded
@@ -71,6 +71,8 @@ public class LeetCode_302_Q2 {
 
     /**
      * [Performance]
+     * Runtime: 153 ms, faster than 21.47% of Java online submissions for Max Sum of a Pair With Equal Sum of Digits.
+     * Memory Usage: 129.9 MB, less than 5.03% of Java online submissions for Max Sum of a Pair With Equal Sum of Digits.
      * @param nums input
      * @return largest summation
      */
@@ -114,13 +116,51 @@ public class LeetCode_302_Q2 {
         return max;
     }
 
-    /** MaxHeap will keep maximum integer at the top,
-     * All children are smaller than their parent.
-    */
+    /**
+     * [Performance]
+     * Runtime: 62 ms, faster than 83.42% of Java online submissions for Max Sum of a Pair With Equal Sum of Digits.
+     * Memory Usage: 57.6 MB, less than 83.50% of Java online submissions for Max Sum of a Pair With Equal Sum of Digits.
+     * @param nums input
+     * @return largest summation
+     */
+    public static int maximumSum3SpaceOptimized(int[] nums) {
+        int leng = nums.length;
+        MaxHeap arr[] = new MaxHeap[81];
+        for (int i = 0; i < leng; i++) {
+            int num = nums[i];
+            int sum = 0;
+            while (num != 0) {
+                sum += num % 10;
+                num /= 10;
+            }
+            if (arr[sum - 1] == null)
+                arr[sum - 1] = new MaxHeap();
+            arr[sum - 1].add(nums[i]);
+        }
+        int max = -1;
+        for (int i = 0; i < 81; i++) {
+            if (arr[i] == null)
+                continue;
+            if (arr[i].length < 2)
+                continue;
+            else if (arr[i].length < 3) {
+                int sum = arr[i].array[0] + arr[i].array[1];
+                if (sum > max)
+                    max = sum;
+            } else {
+                int sum = arr[i].array[1] > arr[i].array[2] ? arr[i].array[0] + arr[i].array[1]
+                        : arr[i].array[0] + arr[i].array[2];
+                if (sum > max)
+                    max = sum;
+            }
+        }
+        return max;
+    }
 
     public static void main(String[] args) {
-        System.out.println(maximumSum3(new int[] { 690992339, 103818011, 366056477, 695134609, 84800508, 25430336,
-                416187020, 593871750, 392197845, 500153808, 894390533, 242464164, 541488323, 995525321, 58049250,
+        System.out.println(maximumSum3SpaceOptimized(new int[] {
+                690992339, 103818011, 366056477, 695134609, 84800508, 25430336, 416187020,
+                593871750, 392197845, 500153808, 894390533, 242464164, 541488323, 995525321, 58049250,
                 72792696, 175433677, 826938449, 38612857, 261244469, 971822570, 246193894, 787973790, 422862379,
                 759565285, 92767125, 59772559, 633612559, 879541035, 375284627, 838720721, 959464404, 85904732,
                 236501370, 721623342, 833250880, 948483245, 703312036, 873625855, 309990547, 765893988, 322886454,
@@ -176,6 +216,9 @@ public class LeetCode_302_Q2 {
     }
 }
 
+/** MaxHeap will keep maximum integer at the top,
+ * All children are smaller than their parent.
+*/
 class MaxHeap {
     int array[];
     int length;

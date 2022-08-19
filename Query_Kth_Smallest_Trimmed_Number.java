@@ -1,4 +1,4 @@
-public class LeetCode_302_Q3 {
+public class Query_Kth_Smallest_Trimmed_Number {
     public int[] smallestTrimmedNumbers(String[] nums, int[][] queries) {
         int q_leng = queries.length;
         int result[] = new int[q_leng];

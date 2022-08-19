@@ -7,7 +7,7 @@ import java.util.List;
     answer[i] == "Buzz" if i is divisible by 5.
     answer[i] == i (as a string) if none of the above conditions are true.
  */
-public class FizzBuzz {
+public class Fizz_Buzz {
     public List<String> fizzBuzz(int n) {
         String arr[] = new String[n];
         for (int i = 0; i < n; i++) {

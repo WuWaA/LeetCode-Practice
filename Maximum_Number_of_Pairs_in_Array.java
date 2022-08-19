@@ -1,4 +1,4 @@
-class LeetCode_302_Q1 {
+class Maximum_Number_of_Pairs_in_Array {
     public static int[] numberOfPairs(int[] nums) {
         int pair = 0;
         int leng = nums.length;

@@ -1,4 +1,4 @@
-public class RansomNote {
+public class Ransom_Note {
     public boolean canConstruct(String ransomNote, String magazine) {
         int arr[] = new int[26];
         for (int i = 0; i < magazine.length(); i++) {

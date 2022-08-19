@@ -1,4 +1,4 @@
-public class MiddleLinkedList {
+public class Middle_of_the_Linked_List {
     public static ListNode middleNode(ListNode head) {
         ListNode slow = head;
         boolean flag = false;

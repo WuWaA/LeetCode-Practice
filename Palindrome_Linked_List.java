@@ -8,7 +8,7 @@
  *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  * }
  */
-class PalindromeLinkedList {
+class Palindrome_Linked_List {
     static ListNode origin;
 
     public static boolean isPalindrome(ListNode head) {

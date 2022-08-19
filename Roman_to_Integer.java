@@ -15,7 +15,7 @@
 
  */
 
-class Solution {
+class Roman_to_Integer {
     public int romanToInt(String s) {
         int result = 0;
         char last = ' ';
