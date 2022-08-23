@@ -6,15 +6,15 @@ import java.util.LinkedList;
 public class Split_Array_into_Consecutive_Subsequences {
     public static boolean isPossible(int[] nums) {
         LinkedList<Pair> arr2d = new LinkedList<Pair>();
-
+        boolean noSort = true;
         arr2d.add(new Pair(1, nums[0])); // {size,head}
         for (int i = 1; i < nums.length; i++) {
             int size = arr2d.size();
             boolean flag = true;
-            if (size > 1)
+            if (!noSort && size > 1) {
                 sort(arr2d);
-            /* try add valid value to shortest subsequence */
-            /* need to sort the length of subsequences */
+                noSort = true;
+            }
             for (int j = 0; j < size; j++) {
                 if (nums[i] == arr2d.get(j).tail + 1) {
                     arr2d.get(j).subLen++;
@@ -23,8 +23,10 @@ public class Split_Array_into_Consecutive_Subsequences {
                     break;
                 }
             }
-            if (flag)
+            if (flag) {
                 arr2d.addFirst(new Pair(1, nums[i]));
+                noSort = false;
+            }
         }
         for (Pair n : arr2d) {
             if (n.subLen < 3)
@@ -34,16 +36,17 @@ public class Split_Array_into_Consecutive_Subsequences {
     }
 
     static void sort(LinkedList<Pair> list) {
-        // use set() to swap
-        // bobble sort? or should I use quick sort? see performance
-        for (int i = list.size() - 1; i > 0; i--) {
-            for (int j = i - 1; j > 0; j--) {
-                if (list.get(i).subLen > list.get(j).subLen) {
-                    Pair temp = new Pair(list.get(i).subLen, list.get(i).tail);
-                    list.set(i, list.get(j));
-                    list.set(j, temp);
-                }
+        // faster when almost sorted -> insertion sort
+        for (int i = 1; i < list.size(); i++) {
+            Pair hold = list.get(i);
+            int len = hold.subLen;
+            int j = i - 1;
+
+            while (j >= 0 && list.get(j).subLen > len) {
+                list.set(j + 1, list.get(j));
+                j = j - 1;
             }
+            list.set(j + 1, hold);
         }
     }
 
