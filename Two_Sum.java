@@ -5,7 +5,7 @@ public class Two_Sum {
      * Constraints: Only one valid answer exists.
      * Thus we could assume some situation to cutting down the average time complexity
      * Faced Problem: -1000 + 1000 = 0, thus cannot ignore number such as "nums[i] <= target"
-     * Worst time: O(N^2), Expected average time: O(1/4N^2)
+     * Worst time: N*(N/2) = O(1/2N^2), Expected average time: (N/2)*(N/2) = O(1/4N^2)
      * Runtime: 47 ms, faster than 46.21% of Java online submissions for Two Sum.
      * Memory Usage: 44.9 MB, less than 65.14% of Java online submissions for Two Sum.
      * @param nums
