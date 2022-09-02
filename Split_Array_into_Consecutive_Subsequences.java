@@ -100,6 +100,7 @@ public class Split_Array_into_Consecutive_Subsequences {
      * @return
      */
     public static boolean isPossible3(int[] nums) {
+        @SuppressWarnings("unchecked")
         LinkedList<Integer> indx[] = new LinkedList[2001];
         for (int i = 0; i < nums.length; i++) {
             if (nums[i] + 999 >= 0 && indx[nums[i] + 999] != null && indx[nums[i] + 999].size() != 0) { // 如果"之前"合法且存在且非空
