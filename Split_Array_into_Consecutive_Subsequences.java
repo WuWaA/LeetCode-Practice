@@ -155,49 +155,106 @@ public class Split_Array_into_Consecutive_Subsequences {
      * @return
      */
     public static boolean isPossible_Optimal_Solution(int[] nums) {
-        int pre = Integer.MIN_VALUE;
-        int p1 = 0;
-        int p2 = 0;
-        int p3 = 0;
-
-        int cur = 0;
-        int cnt = 0;
-        int c1 = 0;
-        int c2 = 0;
-        int c3 = 0;
-
-        for (int i = 0; i < nums.length; pre = cur, p1 = c1, p2 = c2, p3 = c3) {
-            for (cur = nums[i], cnt = 0; i < nums.length && cur == nums[i]; i++) {
-                cnt++;
-            }
-
-            if (cur != pre + 1) {
-                if (p1 != 0 || p2 != 0) {
-                    return false;
-                }
-
-                c1 = cnt;
-                c2 = 0;
-                c3 = 0;
-
-            } else {
-                if (cnt < p1 + p2) {
-                    return false;
-                }
-
-                c1 = Math.max(0, cnt - (p1 + p2 + p3));
-                c2 = p1;
-                c3 = p2 + Math.min(p3, cnt - (p1 + p2));
-            }
+        // The idea is we have the preference in the following order
+        //  - Extend length2 chain to length3
+        //  - Extend length1 chain to length2
+        //  - Extend old >= length3 chain to new >= length3 chain
+        //  - Create a new chain.
+        if (nums == null || nums.length <= 0) {
+            return false;
         }
+        int curNum = 0, preNum = Integer.MIN_VALUE;
+        int curEndL1 = 0, curEndL2 = 0, curEndL3 = 0;
+        int preEndL1 = 0, preEndL2 = 0, preEndL3 = 0;
+        int m = nums.length;
+        for (int i = 0; i < m;) {
+            curNum = nums[i];
+            // Number of repeated elements ending at curNum.
+            int cnt = 0;
+            while (i < m && curNum == nums[i]) {
+                i++;
+                cnt++; // 计算有几个连续的[当前数字]
+            }
+            if (preNum + 1 != curNum) {
+                if (preEndL1 != 0 || preEndL2 != 0) {
+                    // If it's not continuous (preNum + 1 != curNum) and
+                    // chains ending at pre number with length 1 and 2
+                    // are non-zero, just return false.
+                    return false;
+                }
+                curEndL1 = cnt; // 有几个[当前数字]，就建立几个长度为一的子序列
+                curEndL2 = curEndL3 = 0; // 为什么[当前长度二]和[当前长度三]归零？因为数字非连续，断档了，长度不可能再增加
+                // 与此同时，[当前长度二]其实一定是零，因为上一次循环时的最后，[上个长度二]赋值为[当前长度二]
+                // 这里把[当前长度二]和[当前长度三]归零，是因为在循环开始时没有更新当前长度的操作，而是分开放在两个状态里
+            } else {
+                if (cnt < preEndL1 + preEndL2) {
+                    // When it's continuous (preNum + 1 == curNum)
+                    // if current number cannot cover the number of chains ending at
+                    // pre number with length 1 and 2, just return false.
+                    // 连续的[当前数字]不够填补[上个长度一]和[上个长度二]
+                    // 必然会出现长度小于三的子序列，所以返回假
+                    return false;
+                }
+                // 如果数量足够填补，则进入下面的部分
+                // Firstly extended length 1 chain to be length 2.
+                curEndL2 = preEndL1; // [上个长度一]变成[当前长度二]，因为被填补了
+                // Then extended length 2 chain to be length 3.
+                curEndL3 = preEndL2; // [上个长度二]变成[当前长度三]，因为被填补了
 
-        return (p1 == 0 && p2 == 0);
+                // Then residual curNum will be distributed to either preEndL3 chains or create new chains.
+                // Should prefer extend old chains first.
+                int residual = cnt - preEndL1 - preEndL2; // 填补[上个长度一]和[上个长度二]之后，还剩几个[当前数字]
+                /* 重点部分 */
+                // 长度大于三的子序列，不需要再关心它们的长度，而只需关心他们的数量
+                // 这里的数量是指，有多少个长度大于三的子序列，它们的末尾数字是[上个数字]
+                // 这决定了我们有多少个位置可以接收“填补完长度一和二”之后剩下的[当前数字]
+                /*
+                int numToExtendOldLongChain = Math.min(preEndL3, residual);
+                curEndL3 += numToExtendOldLongChain;
+                // Then create new chain.
+                curEndL1 = Math.max(0, residual - numToExtendOldLongChain);
+                */
+                // 我更容易理解的逻辑的版本：
+                if (residual > preEndL3) {
+                    curEndL3 = preEndL2 + preEndL3;
+                    curEndL1 = residual - preEndL3;
+                }
+                else {
+                    curEndL3 = preEndL2 + residual;
+                    curEndL1 = 0;
+                }
+                /* 上面这部分代码的解释：
+                 * 是剩下的[当前数字]多？
+                 * 还是剩下的[上个长度三]多？
+                 * 如果剩下的[当前数字]多，则建立新的长度为一的子序列
+                 * 如果剩下的[上个长度三]多，则减少[当前长度三]的数量，
+                 * 因为剩下的[当前数字]不够填补[当前长度三]，也就是说，
+                 * 不能被填补的[当前长度三]的子序列在此截止，不能够再被延长了
+                 */
+                // 例如，preEndL3 -> 2，residual -> 3
+                // 则curEndL3 = 被填补的[上个长度二] + preEndL3
+                // curEndL3 = 被填补的[上个长度二] + 2
+                // 同时，新的子序列curEndL1 = residual - preEndL3 = 1
+
+                // 再如，preEndL3 -> 3，residual -> 2
+                // 则curEndL3 = 被填补的[上个长度二] + residual
+                // curEndL3 = 被填补的[上个长度二] + 2
+                // 同时，不需要建立新的子序列
+            }
+            // 更新当前数字为上个数字，准备下一次循环
+            preNum = curNum;
+            preEndL1 = curEndL1;
+            preEndL2 = curEndL2;
+            preEndL3 = curEndL3;
+        }
+        return preEndL1 == 0 && preEndL2 == 0;
     }
 
     public static void main(String[] args) {
-        System.out.println(isPossible3(new int[] { 1, 2, 3, 3, 4, 5 }));
-        System.out.println(isPossible3(new int[] { 1, 2, 3, 3, 4, 4, 5, 5 }));
-        System.out.println(isPossible3(new int[] { 1, 2, 3, 4, 4, 5 }));
+        // System.out.println(isPossible_Optimal_Solution(new int[] { 1, 2, 3, 3, 4, 5 }));
+        // System.out.println(isPossible_Optimal_Solution(new int[] { 1, 2, 3, 3, 4, 4, 5, 5 }));
+        System.out.println(
+                isPossible_Optimal_Solution(new int[] { 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5 }));
 
         /* Array Combining */
         // int array1[] = InputArray1(), array2[] = InputArray2();
@@ -205,10 +262,13 @@ public class Split_Array_into_Consecutive_Subsequences {
         // System.arraycopy(array1, 0, array1and2, 0, array1.length);
         // System.arraycopy(array2, 0, array1and2, array1.length, array2.length);
 
-        // long startTime = System.nanoTime();
+        // long startTime;
+        // long endTime;
+        // long totalTime;
+        // startTime = System.nanoTime();
         // System.out.println(isPossible(array1and2));
-        // long endTime = System.nanoTime();
-        // long totalTime = endTime - startTime;
+        // endTime = System.nanoTime();
+        // totalTime = endTime - startTime;
         // System.out.println("total time:   " + totalTime);
         // startTime = System.nanoTime();
         // System.out.println(isPossible2(array1and2));
