@@ -82,6 +82,7 @@ public class Numbers_With_Same_Consecutive_Differences {
      * @return
      */
     public int[] numsSameConsecDiff3(int n, int k) {
+        //TODO
         return null;
     }
 
