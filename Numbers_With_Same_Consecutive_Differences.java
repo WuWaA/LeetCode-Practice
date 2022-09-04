@@ -82,13 +82,48 @@ public class Numbers_With_Same_Consecutive_Differences {
      * @return
      */
     public int[] numsSameConsecDiff3(int n, int k) {
-        //TODO
-        return null;
+        List<Integer> l = new LinkedList<Integer>();
+        for (int i = 1; i < 10; i++) {
+            BinaryTree t = new BinaryTree(i);
+            recursion(t, k, n - 1, l);
+        }
+        return l.stream().mapToInt(i -> i).toArray();
+    }
+
+    void recursion(BinaryTree n, int k, int d, List<Integer> l) {
+        if (n == null || d == 0)
+            return;
+        if (k != 0) {
+            if (n.val % 10 - k >= 0) {
+                n.l = new BinaryTree(n.val * 10 + (n.val % 10 - k));
+                if (d == 1)
+                    l.add(n.l.val);
+            }
+            if (n.val % 10 + k < 10) {
+                n.r = new BinaryTree(n.val * 10 + (n.val % 10 + k));
+                if (d == 1)
+                    l.add(n.r.val);
+            }
+        } else {
+            n.r = new BinaryTree(n.val * 10 + n.val % 10);
+            if (d == 1)
+                l.add(n.r.val);
+        }
+        recursion(n.l, k, d - 1, l);
+        recursion(n.r, k, d - 1, l);
     }
 
     class BinaryTree {
         int val;
         BinaryTree l, r;
+
+        BinaryTree(int v) {
+            val = v;
+        }
     }
 
+    public static void main(String[] args) {
+        Numbers_With_Same_Consecutive_Differences t = new Numbers_With_Same_Consecutive_Differences();
+        System.out.println(t.numsSameConsecDiff3(3, 7));
+    }
 }
