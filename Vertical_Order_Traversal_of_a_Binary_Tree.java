@@ -80,6 +80,59 @@ public class Vertical_Order_Traversal_of_a_Binary_Tree {
         }
     }
 
+    /**
+     * Second Try - Optimal Solution
+     * Runtime: 5 ms, faster than 65.13% of Java online submissions for Vertical Order Traversal of a Binary Tree.
+     * Memory Usage: 42.1 MB, less than 98.55% of Java online submissions for Vertical Order Traversal of a Binary Tree.
+     */
+    public List<List<Integer>> verticalTraversal2(TreeNode root) {
+        List<List<Integer>> l = new ArrayList<List<Integer>>();
+        HashMap<Integer, TreeMap<Integer, PriorityQueue<Integer>>> c = new HashMap<Integer, TreeMap<Integer, PriorityQueue<Integer>>>();
+        Queue<Pair<TreeNode, Pair<Integer, Integer>>> q = new ArrayDeque<Pair<TreeNode, Pair<Integer, Integer>>>();
+        Pair<Integer, Integer> r = new Pair<Integer, Integer>(Integer.MAX_VALUE, Integer.MIN_VALUE);
+
+        BFS2(root, q, r, c);
+
+        int range = (int) r.b - (int) r.a + 1;
+        int shift = Math.abs((int) r.a);
+
+        for (int i = 0; i < range; i++)
+            l.add(new ArrayList<Integer>());
+
+        for (int row : c.keySet())
+            for (int column : c.get(row).keySet())
+                while (!c.get(row).get(column).isEmpty())
+                    l.get(shift + column).add(c.get(row).get(column).poll());
+
+        return l;
+    }
+
+    void BFS2(TreeNode root, Queue<Pair<TreeNode, Pair<Integer, Integer>>> q, Pair<Integer, Integer> range,
+            HashMap<Integer, TreeMap<Integer, PriorityQueue<Integer>>> collection) {
+        q.add(new Pair<TreeNode, Pair<Integer, Integer>>(root, new Pair<Integer, Integer>(0, 0)));
+        while (!q.isEmpty()) {
+            Pair<TreeNode, Pair<Integer, Integer>> t = q.poll();
+            TreeNode node = t.a;
+            if (t.a != null) {
+                int row = t.b.a;
+                int column = t.b.b;
+                if (!collection.containsKey(row))
+                    collection.put(row, new TreeMap<Integer, PriorityQueue<Integer>>());
+                if (!collection.get(row).containsKey(column))
+                    collection.get(row).put(column, new PriorityQueue<Integer>());
+                collection.get(row).get(column).add(node.val);
+                q.add(new Pair<TreeNode, Pair<Integer, Integer>>(node.left,
+                        new Pair<Integer, Integer>(row + 1, column - 1)));
+                q.add(new Pair<TreeNode, Pair<Integer, Integer>>(node.right,
+                        new Pair<Integer, Integer>(row + 1, column + 1)));
+                if (column < range.a)
+                    range.a = column;
+                if (column > range.b)
+                    range.b = column;
+            }
+        }
+    }
+
     class TreeNode {
         int val;
         TreeNode left;
@@ -112,16 +165,16 @@ public class Vertical_Order_Traversal_of_a_Binary_Tree {
         // root.left.right.right = new TreeNode(11);
         // root.right.left.left = new TreeNode(12);
         // root.right.left.right = new TreeNode(13);
-        // System.out.println(t.verticalTraversal(root));
+        System.out.println(t.verticalTraversal2(root));
 
         // Small test about TreeMap
-        TreeMap<Integer, String> m = new TreeMap<>();
-        m.put(1, "A");
-        m.put(1, "B");
-        m.put(1, "C");
-        m.put(1, "D");
-        for (int k : m.keySet())
-            System.out.println(m.get(k)); // "D"
-        System.out.println(m.values().size()); // 1
+        // TreeMap<Integer, String> m = new TreeMap<>();
+        // m.put(1, "A");
+        // m.put(1, "B");
+        // m.put(1, "C");
+        // m.put(1, "D");
+        // for (int k : m.keySet())
+        //     System.out.println(m.get(k)); // "D"
+        // System.out.println(m.values().size()); // 1
     }
 }
