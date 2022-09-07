@@ -3,12 +3,12 @@ public class Query_Kth_Smallest_Trimmed_Number {
         int q_leng = queries.length;
         int result[] = new int[q_leng];
         for (int i = 0; i < q_leng; i++) { // queries
-            int s_leng = nums[0].length();
-            int t_leng = nums.length;
-            int index = queries[i][1];
+            int s_leng = nums[0].length(); // num digits
+            int t_leng = nums.length; // total nums
+            int index = queries[i][1]; // x-th smallest
             long save[] = new long[t_leng];
             long copy[] = new long[t_leng];
-            if (s_leng <= index) {
+            if (s_leng >= index) {
                 for (int j = 0; j < t_leng; j++) {
                     save[j] = Long.parseLong(nums[j].substring(s_leng - index));
                     copy[j] = save[j];
@@ -23,7 +23,8 @@ public class Query_Kth_Smallest_Trimmed_Number {
             // after trim
             long r = find(copy, queries[i][0]);
             //System.out.println(r);
-            for (int j = t_leng - 1; j > 0; j--) {
+            for (int j = t_leng - 1; j >= 0; j--) {
+                //System.out.println(j+","+save[j]);
                 if (save[j] == r) {
                     result[i] = j;
                     break;
