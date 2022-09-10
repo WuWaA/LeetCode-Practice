@@ -51,6 +51,11 @@ public class The_Number_of_Weak_Characters_in_the_Game {
         return counter;
         */
 
+        /**
+         * https://leetcode.com/submissions/detail/795927436/
+         * Runtime: 78 ms
+         * Memory Usage: 94.4 MB
+         */
         HashMap<Integer, Integer> map = new HashMap<>();
         int counter = 0;
         int max = 0;
