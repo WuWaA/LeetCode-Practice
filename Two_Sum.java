@@ -36,6 +36,22 @@ public class Two_Sum {
         return null;
     }
 
+    /**
+     * Optimal Solution - 1 ms
+     * @param nums
+     * @param target
+     * @return
+     */
+    public int[] twoSumHashMap(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        for (int i = 0; i < nums.length; i++) {
+            if (map.containsKey(target - nums[i]))
+                return new int[] {map.get(target - nums[i]), i};
+            map.put(nums[i], i);
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
         int test[] = twoSum(new int[] { 0, 4, 3, 0 }, 0);
         System.out.println(test[0] + "," + test[1]);
