@@ -37,7 +37,7 @@ public class Two_Sum {
     }
 
     /**
-     * Optimal Solution - 1 ms
+     * Optimal Solution O(N)
      * @param nums
      * @param target
      * @return
