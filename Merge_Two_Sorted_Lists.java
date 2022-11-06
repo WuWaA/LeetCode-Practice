@@ -13,7 +13,6 @@ public class Merge_Two_Sorted_Lists {
         if (list1 == null && list2 == null) {
             return null;
         }
-        boolean flag = true;
         ListNode node = new ListNode();
         ListNode keep = node;
         while (list1 != null || list2 != null) {
